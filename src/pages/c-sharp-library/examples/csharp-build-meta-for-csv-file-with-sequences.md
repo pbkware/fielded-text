@@ -1,4 +1,5 @@
 ---
+layout: '@layouts/BaseLayout.astro'
 title: Build Meta with Sequences
 ---
 

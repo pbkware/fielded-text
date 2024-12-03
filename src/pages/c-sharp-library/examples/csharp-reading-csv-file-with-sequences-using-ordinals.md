@@ -1,4 +1,5 @@
 ---
+layout: '@layouts/BaseLayout.astro'
 title: Read CSV file with Sequences using Ordinals
 ---
 

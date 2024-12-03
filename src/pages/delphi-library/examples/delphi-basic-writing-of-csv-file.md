@@ -1,4 +1,5 @@
 ---
+layout: '@layouts/BaseLayout.astro'
 title: Basic writing of CSV file
 ---
 
