@@ -1,0 +1,13 @@
+---
+interface Props {
+    fileName: string;
+    text: string;
+}
+
+const { fileName, text } = Astro.props;
+
+const url = import.meta.env.BASE_URL + 'assets/' + fileName;
+---
+
+<a href={url}>{text}</a>
+

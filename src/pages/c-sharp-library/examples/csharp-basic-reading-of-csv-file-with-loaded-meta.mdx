@@ -1,0 +1,82 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: "Basic reading of CSV file"
+---
+
+import Link from '@components/Link.astro';
+import * as csharpBasicExampleMetaFilePage from './csharp-basic-example-meta-file.md';
+
+This examples shows how a CSV file can be read using Meta from a Fielded Text Meta File.  It uses the <Link url={csharpBasicExampleMetaFilePage.url} text="Basic Example Meta File" />.
+
+## CSV File:
+
+```text
+"Pet Name","Age","Color","Date Received","Price","Needs Walking","Type"
+"","(Years)","","","(Dollars)","",""
+Rover,4.5,Brown,12 Feb 2004,80,True,Dog
+Charlie,,Gold,5 Apr 2007,12.3,False,Fish
+Molly,2,Black,25 Dec 2006,25,False,Cat
+Gilly,,White,10 Apr 2007,10,False,Guinea Pig
+```
+
+## Console Application
+
+```csharp
+using System;
+using Xilytix.FieldedText;
+
+namespace BasicRead_LoadMeta
+{
+    // Simple Example of using FtReader to parse a CSV file.
+    // In this example, the Meta is loaded from a file and then used to
+    // read the CSV file.
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Name of file containing Meta
+            const string MetaFileName = "BasicExampleMeta.ftm";
+            // Name of file to be read
+            const string CsvFileName = "BasicExample.csv";
+
+            // Define FieldNames
+            const string PetNameFieldName = "PetName";
+            const string AgeFieldName = "Age";
+            const string ColorFieldName = "Color";
+            const string DateReceivedFieldName = "DateReceived";
+            const string PriceFieldName = "Price";
+            const string NeedsWalkingFieldName = "NeedsWalking";
+            const string TypeFieldName = "Type";
+
+            // Create Meta from file
+            FtMeta meta = FtMetaSerializer.Deserialize(MetaFileName);
+
+            // Create Reader
+            using (FtReader reader = new FtReader(meta, CsvFileName))
+            {
+                // Read each record in text file and write field
+                // values to console
+
+                object[] recObjects = new object[7];
+                int recNumber = 0;
+                while (reader.Read())
+                {
+                    recNumber++;
+
+                    recObjects[0] = reader[PetNameFieldName];
+                    recObjects[1] = reader[AgeFieldName];
+                    recObjects[2] = reader[ColorFieldName];
+                    recObjects[3] = reader[DateReceivedFieldName];
+                    recObjects[4] = reader[PriceFieldName];
+                    recObjects[5] = reader[NeedsWalkingFieldName];
+                    recObjects[6] = reader[TypeFieldName];
+
+                    Console.WriteLine(recNumber.ToString() + ": " +
+                                      string.Join(",", recObjects));
+                }
+            }
+        }
+    }
+}
+```

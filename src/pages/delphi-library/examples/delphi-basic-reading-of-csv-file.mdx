@@ -1,0 +1,165 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: Basic reading of CSV file
+---
+import AssetLink from '@components/AssetLink.astro';
+import Link from '@components/Link.astro';
+import * as creatingMetaFileUsingFteditorPage from '../../fteditor/creating-meta-file-using-fteditor/index.mdx';
+
+This tutorial demonstrates how to use the Delphi TFieldedText component to read a CSV file and place the headings and records into a Delphi StringGrid.
+
+The contents of the CSV file to be imported are shown here:
+
+```text
+"Pet Name", "Age", "Color", "Date Received", "Price", "Needs Walking", "Type"
+, (Years), , , (Dollars), ,
+"Rover, 4.5, Brown, 12 Feb 2004, 80, True, "Dog"
+"Charlie", , Gold, 5 Apr 2007, 12.3, False, "Fish"
+"Molly", 2, Black, 12 Dec 2006, 25, False, "Cat"
+"Gilly", , White, 10 Apr 2007, 10, False, "Guinea Pig"
+```
+
+This text file has 2 headings and 4 records. This tutorial will show how to read this file into a StringGrid on a Delphi Form.
+
+## Step 1: Select a folder
+
+Create or select an empty folder for the program we are going to develop.
+
+## Step 2: Get text file
+
+Create a text file called `basic-read-example.txt` and place the contents of the above CSV file into it. Save this file to the folder where the compiled executable will run from (normally the project folder).  Alternatively download the text file from <AssetLink fileName="basic-read-example.txt" text="here" /> and save to the folder where the compiled executable will run from.
+
+## Step 3: Create Fielded Text Meta file
+
+The Meta file specifies the structure of the text file. In this step we will create a Meta file called "basic-example.ftm" for the text file. There are 2 ways of doing this.
+
+1. The easy way is to simply download the Meta file from <AssetLink fileName="basic-example.ftm" text="here" /> and place in the folder where the compiled executable will run from.
+
+1. Alternatively, you can create it with a Fielded Text Editor. This will provide a better understanding of what a Meta file actually is. Follow the steps <Link url={creatingMetaFileUsingFteditorPage.url} text="here" /> to create the "basic-example.ftm" and then save it into the folder where the compiled executable will run from.
+
+The contents of the Fielded Text Meta File should be similar to the text shown below:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FieldedText HeadingLineCount="2" HeadingWritePrefixSpace="True">
+  <Field Name="PetName" ValueQuotedType="Always" HeadingWritePrefixSpace="False" Headings="Pet Name" />
+  <Field DataType="Float" Name="Age" ValueWritePrefixSpace="True" Headings="Age, " />
+  <Field Name="Color" ValueWritePrefixSpace="True" Headings="Color, (Years)" />
+  <Field DataType="DateTime" Name="DateReceived" ValueWritePrefixSpace="True" Headings="Date Received, " Format="d MMM yyyy" />
+  <Field DataType="Decimal" Name="Price" ValueWritePrefixSpace="True" Headings="Price, (Dollars)" />
+  <Field DataType="Boolean" Name="NeedsWalking" ValueWritePrefixSpace="True" Headings="Needs Walking, " />
+  <Field Name="Type" ValueQuotedType="Always" ValueWritePrefixSpace="True" Headings="Type" />
+</FieldedText>
+```
+
+## Step 4: Create a Delphi VCL Forms Application project
+
+Create a Delphi VCL Forms Application project in the folder using a recent version of Delphi.  Either a 32 or 64 bit application can be created.
+
+## Step 5: Include TFieldedText files folder in search path
+
+Add a the folder containing either TFieldedText source files or DCU files to the project search path. Must be version 2.2.10 or later.
+
+## Step 6: Place controls on Form
+
+Add the following items to a form in the project:
+
+* A StringGrid
+* A Button
+
+## Step 7: Add FieldedText uses clauses and Button Click event
+
+Add the following uses clause and Button Click event code:
+
+```pascal
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  FieldedText: TFieldedText;
+  LineIdx: Integer;
+  FieldIdx: Integer;
+  PetNameField: TFieldedTextField;
+  AgeField: TFieldedTextField;
+  ColorField: TFieldedTextField;
+  DateReceivedField: TFieldedTextField;
+  PriceField: TFieldedTextField;
+  NeedsWalkingField: TFieldedTextField;
+  TypeField: TFieldedTextField;
+begin
+  FieldedText := TFieldedText.Create;
+  try
+    // Load the Meta which describes the text file
+    FieldedText.LoadMeta('BasicExample.ftm');
+
+    // Specify the text file
+    FieldedText.FilePath := 'BasicReadExample.txt';
+
+    // Parse the file once to work out get headers and calculate number or records
+    FieldedText.CountRecords;
+
+    // Set up grid
+    StringGrid1.ColCount := FieldedText.FieldCount;
+    StringGrid1.RowCount := FieldedText.HeadingLineCount + FieldedText.RecordCount;
+    StringGrid1.FixedRows := FieldedText.HeadingLineCount;
+
+    // Write Headers to Grid
+    for LineIdx := 0 to FieldedText.HeadingLineCount - 1 do
+    begin
+      for FieldIdx := 0 to FieldedText.FieldCount - 1 do
+      begin
+        StringGrid1.Cells[FieldIdx, LineIdx] := FieldedText.Fields[FieldIdx].Headings[LineIdx];
+      end;
+    end;
+
+    FieldedText.BeginRead;
+    try
+      PetNameField := FieldedText.FindTableField('PetName');
+      AgeField := FieldedText.FindTableField('Age');
+      ColorField := FieldedText.FindTableField('Color');
+      DateReceivedField := FieldedText.FindTableField('DateReceived');
+      PriceField := FieldedText.FindTableField('Price');
+      NeedsWalkingField := FieldedText.FindTableField('NeedsWalking');
+      TypeField := FieldedText.FindTableField('Type');
+
+      LineIdx := FieldedText.HeadingLineCount;
+
+      // Read records and write values to grid
+      while FieldedText.Read do
+      begin
+        StringGrid1.Cells[0, LineIdx] := PetNameField.AsString;
+        if AgeField.Null then
+          StringGrid1.Cells[1, LineIdx] := '<Null>'
+        else
+          StringGrid1.Cells[1, LineIdx] := FloatToStr(AgeField.AsDouble);
+        StringGrid1.Cells[2, LineIdx] := ColorField.AsString;
+        StringGrid1.Cells[3, LineIdx] := DateToStr(DateReceivedField.AsDateTime);
+        StringGrid1.Cells[4, LineIdx] := CurrToStr(PriceField.AsCurrency);
+        StringGrid1.Cells[5, LineIdx] := BoolToStr(NeedsWalkingField.AsBoolean);
+        StringGrid1.Cells[6, LineIdx] := TypeField.AsString;
+
+        Inc(LineIdx);
+      end;
+    finally
+      FieldedText.EndRead;
+    end;
+
+  finally
+    FieldedText.Free;
+  end;
+end;
+```
+
+## Step 8: Compile and Run
+
+Compile and run the program. When the button is clicked, the program will do the following:
+
+* Create a TFieldedText object.
+* Load the Meta.
+* Specify the text file.
+* Count the records.  This will parse the file once and also get the headings.
+* Set up columns and rows in TStringGrid.
+* Read the Headings into TStringGrid.
+* Call BeginRead to start parsing the file again.
+* Get the fields.
+* Call Read repeatedly to get each record.
+* For each record, get the field values and place them into a row in the TStringGrid.
+* Call EndRead when there are no more records in the file.

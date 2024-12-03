@@ -1,0 +1,30 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: Fielded Text
+---
+
+import Link from '@components/Link.astro';
+import * as cSharpLibraryPage from './c-sharp-library/index.mdx';
+import * as delphiLibraryPage from './delphi-library/index.mdx';
+import * as featuresPage from './features.md';
+import * as fteditorPage from './fteditor/index.mdx';
+import * as ftvalidPage from './ftvalid/index.md';
+
+Fielded Text is a (proposed) standard which specifies a schema for text files which contain tables of values.  CSV files and Fixed Width text data files are examples of Fielded Text files.  By specifying a schema for such files, it allows the data in these files to be read or written without having to take into account how the data is formatted within the files.
+
+More information about the Fielded Text can be found at the website:\
+[`https://fieldedtext.org`](https://fieldedtext.org)\
+however a summary of its features are <Link url={featuresPage.url} text="here" />.
+
+The following products have been developed to support the Fielded Text standard:
+
+* **<Link url={cSharpLibraryPage.url} text="Fielded Text C# Library" />**\
+A C# class library which allows you to read and write Fielded Text files and create and edit Fielded Text Meta files.
+* **<Link url={delphiLibraryPage.url} text="Fielded Text Delphi Library" />**\
+A Delphi library which allows you to read and write Fielded Text files and create and edit Fielded Text Meta files.
+* **<Link url={fteditorPage.url} text="Fielded Text Editor" />**\
+This editor allows you to visually generate the Meta for a Fielded Text File.  It also allows you to easily view and edit the values in a Fielded Text file which has its Meta defined.
+* **<Link url={ftvalidPage.url} text="FTValid" />**\
+A small windows command line program which can validate the format/structure of a Fielded Text or CSV file.
+
+The above products (including their source code) have been released as Public Domain software.  You may freely use any of the software code in any manner you wish.  Note that the C# library was written after the Delphi library and the C# library has a far better design.  It would be the better library to look at if you are interested in developing a fielded text library (for example, in another software language).

@@ -1,0 +1,38 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: Mixed Delimited and Fixed Width Fields
+---
+
+import Link from '@components/Link.astro';
+import * as csharpBasicReadingOfCsvFileWithLoadedMetaPage from './csharp-basic-reading-of-csv-file-with-loaded-meta.mdx';
+import * as csharpWritingOfCsvFileIncludingHeadingsPage from './csharp-writing-of-csv-file-including-headings.mdx';
+
+In most cases, changing the format of the file does not affect the code used to read data from the file or write data to the file.  The aim of the Fielded Text is to separate format from data.  All format information is stored in the Meta file.
+
+For example, if we want to change the format of the file used in this <Link url={csharpBasicReadingOfCsvFileWithLoadedMetaPage.url} text="Read example" /> and this <Link url={csharpWritingOfCsvFileIncludingHeadingsPage.url} text="write example" /> so that fields “PetName”, “Age”, “Color” and “Price” are fixed width but the others remain delimited, we only need to change the Meta file.  The code in these example programs stay the same.
+
+A Meta with this new format is shown below.  The “FixedWidth” attribute indicates that these fields have fixed width format with the width specified by the “Width” attribute. Most of these fields have “HeadingPadCharType” and “ValuePadCharType” set to “EndOfValue” with “EndOfValueChar” set to “ ” (space).  This allows round trip conversion. The heading “Pet Name” however uses HeadingPadCharType of “Auto” as it has a space character within it.
+
+More information about Meta and attributes can be found in the [Fielded Text introduction page](https://fieldedtext.org/Introduction.html) or in the [Fielded Text Standard](https://fieldedtext.org/Standard/index.html).
+
+
+```xml
+<FieldedText HeadingLineCount="2" HeadingEndOfValueChar=" ">
+  <Field Name="PetName" FixedWidth="True" Width="8" ValueEndOfValueChar=" " HeadingPadCharType="Auto"/>
+  <Field DataType="Float" Name="Age" FixedWidth="True" Width="7" ValueEndOfValueChar=" "/>
+  <Field Name="Color" FixedWidth="True" Width="6" ValueEndOfValueChar=" "/>
+  <Field DataType="DateTime" Name="DateReceived" Format="d MMM yyyy"/>
+  <Field DataType="Decimal" Name="Price" FixedWidth="True" Width="9" ValueEndOfValueChar=" "/>
+  <Field DataType="Boolean" Name="NeedsWalking"/>
+  <Field Name="Type"/>
+</FieldedText>
+```
+
+Corresponding Text File:
+
+```text
+Pet Name    AgeColor "Date Received",    Price"Needs Walking","Type"
+        (Years)      "",(Dollars)"",""
+Rover       4.5Brown 12 Feb 2004,       80True,Dog
+Charlie *******Gold  5 Apr 2007,     12.3False,Fish
+```

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FieldedText HeadingLineCount="2" HeadingWritePrefixSpace="True">
+  <Field Name="PetName" ValueQuotedType="Always" HeadingWritePrefixSpace="False" Headings="Pet Name" />
+  <Field DataType="Float" Name="Age" ValueWritePrefixSpace="True" Headings="Age, " />
+  <Field Name="Color" ValueWritePrefixSpace="True" Headings="Color, (Years)" />
+  <Field DataType="DateTime" Name="DateReceived" ValueWritePrefixSpace="True" Headings="Date Received, " Format="d MMM yyyy" />
+  <Field DataType="Decimal" Name="Price" ValueWritePrefixSpace="True" Headings="Price, (Dollars)" />
+  <Field DataType="Boolean" Name="NeedsWalking" ValueWritePrefixSpace="True" Headings="Needs Walking, " />
+  <Field Name="Type" ValueQuotedType="Always" ValueWritePrefixSpace="True" Headings="Type" />
+</FieldedText>

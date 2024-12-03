@@ -1,0 +1,44 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: Creating Meta file using FTEditor
+---
+
+import AssetLink from '@components/AssetLink.astro';
+import Link from '@components/Link.astro';
+import { Image } from 'astro:assets';
+import * as basicReadExampleTextFile from './basic-read-example.txt';
+import fteditorAddTextFieldsImage from './fteditor-add-text-fields.png';
+import fteditorConfigFieldsImage from './fteditor-configure-fields.png';
+import fteditorConfigHeaderImage from './fteditor-configure-header.png';
+import fteditorOpenTextFileImage from './fteditor-open-text-file.png';
+import fteditorSaveMetaImage from './fteditor-save-meta.png';
+
+Install FTEditor and follow the steps below:
+
+1. Start FTEditor and select the &lt;Default&gt; view.
+
+1. Open up the text file: <AssetLink fileName='basic-read-example.txt' text="basic-read-example.txt" /> in FTEditor with the `File | Open Text` menu item.
+<Image src={fteditorOpenTextFileImage} alt="FTEditor open text file screenshot"/>
+
+1. Use the &lt;Add&gt; Field Drop Down box on the bottom left hand side to add 7 fields. The fields should be of type:
+    * String
+    * Float
+    * String
+    * Datetime
+    * Decimal
+    * Boolean
+    * String\
+<Image src={fteditorAddTextFieldsImage} alt="FTEditor add text fields screenshot"/>
+
+1. Select the "Heading" tab in the top left Panel and set "Line Count" to 2.  Also select “Write Prefix Space”
+<Image src={fteditorConfigHeaderImage} alt="FTEditor configure header screenshot"/>
+
+1. Select each of the Fields and configure its properties.  Only modify those properties for each field which are listed as attributes in the Meta File  For example, for the PetName field, modify the Name, ValueQuotedType, HeadingWritePrefixSpace and Headings properties.  The image below identifies where these properties are set.  Note that the DataType property does not need to be set as it was effectively set when the Field Type was selected.\
+\
+You can press the "Parse" button to check whether the Meta is correctly specified. When this button is clicked, the text will be parsed.  If there are any parsing errors, they will be displayed in the bottom right panel.\
+<Image src={fteditorConfigFieldsImage} alt="FTEditor configure fields screenshot"/>
+
+1. Save the Meta File with the `File | Save Meta As` menu item.\
+<Image src={fteditorSaveMetaImage} alt="FTEditor save meta screenshot"/>
+
+

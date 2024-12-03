@@ -1,0 +1,38 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: Fielded Text C# library
+---
+
+import Link from '@components/Link.astro';
+import * as featuresPage from '../features.md';
+import * as examplesPage from './examples/index.mdx';
+
+The Fielded Text C# class library allows you to read and write text files with tables of values (eg. CSV files) in the same way as you read from and write to a database table.
+
+The format and structure of the data within the text file is defined by a small XML file called the Meta file.  Xilytix.FieldedText uses the Meta file to read from and write to the text file as if it were a database.  Typically you would use a [Fielded Text Editor](https://fieldedtext.org/Software.html#Editors) to create these Meta XML files.
+
+The format (schema) of this Meta XML file is specified by a standard defined at [https://fieldedtext.org](https://fieldedtext.org).  In addition to using these Meta XML files, Xilytix.FieldedText can also be used to create them.  These XML files can then also be used by any other software component/library which support this standard.  Refer to the [https://fieldedtext.org](https://fieldedtext.org) website for more information about this standard.
+
+Xilytix.FieldedText can be used to parse or generate nearly any type of CSV and Fielded Text file.  This includes files which have:
+
+* fields are separated by delimiters (eg CSV files).
+* fields which are fixed length.
+* fields that are quoted.
+* fields that have new lines embedded in them.
+* headings.
+* substitutions
+* lines with different sets of fields based on key fields.
+* <Link url={featuresPage.url} text="and more ..." />
+
+It has been release into the public domain so you are free to use the code however you like.
+
+The assembly can be installed[^1] from NuGet:\
+[https://www.nuget.org/packages/Xilytix.FieldedText](https://www.nuget.org/packages/Xilytix.FieldedText)
+
+The source code repository can be viewed[^1] at:\
+[https://bitbucket.org/xilytix/fieldedtext](https://bitbucket.org/xilytix/fieldedtext)
+
+Code Examples can be viewed <Link url={examplesPage.url} text="here" />.
+
+[^1]: DISCLAIMER\
+This software is provided "as is" and we make no representations as to its accuracy, reliability or fit for use. Use at your own risk.

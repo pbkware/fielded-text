@@ -1,0 +1,132 @@
+---
+layout: '@layouts/BaseLayout.astro'
+title: Write CSV file with Sequences
+---
+
+import Link from '@components/Link.astro';
+import * as csharpBuildMetaForCsvFileWithSequencesPage from './csharp-build-meta-for-csv-file-with-sequences.md';
+
+This examples shows how a CSV file that is formatted with sequences, can be written using Meta from a Fielded Text Meta File.  It uses this <Link url={csharpBuildMetaForCsvFileWithSequencesPage.url} text="example Sequence Meta File" />.
+
+## CSV File
+
+The CSV File to be written is:
+
+```text
+1,Misty,45
+1,Oscar,35
+2,Buddy,0.5,35,False
+2,Charlie,2,35,True,John,35.0
+2,Max,0.5,35,False
+3,Bubbles,Orange,Wen
+3,Flash,Yellow,Crucian
+```
+
+## Console Application
+
+```csharp
+using Xilytix.FieldedText;
+
+namespace WriteSequence
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Name of file containing Meta
+            const string MetaFileName = "ExampleSequenceMeta.ftm";
+            // Name of file to be written
+            const string CsvFileName = "ExampleSequence.csv";
+
+            // Define Field Names
+            const string TypeFieldName = "Type";
+            const string NameFieldName = "Name";
+            const string RunningSpeedFieldName = "RunningSpeed";
+            const string WalkDistanceFieldName = "WalkDistance";
+            const string TrainingFieldName = "Training";
+            const string TrainerFieldName = "Trainer";
+            const string SessionCostFieldName = "SessionCost";
+            const string ColorFieldName = "Color";
+            const string ChineseClassificationFieldName = "ChineseClassification";
+
+            // Define Type values
+            const long CatType = 1;
+            const long DogType = 2;
+            const long GoldFishType = 3;
+
+            // Create Meta from file
+            FtMeta meta = FtMetaSerializer.Deserialize(MetaFileName);
+
+            // Create Writer
+            using (FtWriter writer = new FtWriter(meta, CsvFileName))
+            {
+                // When writing records with sequences, you must not set a field's
+                // value if its sequence has not yet been invoked by a redirect.
+                // When writing, whenever a sequence is invoked by a redirect, its
+                // field values are initialized to null
+                // Root Sequence is always automatically invoked
+
+                // Write 1st Record (1st table)
+                writer[TypeFieldName] = CatType; // Invoke Cat Sequence (after Root
+                                                 // Sequence is finished)
+                writer[NameFieldName] = "Misty";
+                writer[RunningSpeedFieldName] = 45.0;
+                writer.Write();
+
+                // Write 2nd Record
+                writer[TypeFieldName] = CatType; // Invoke Cat Sequence (after Root
+                                                 // Sequence is finished)
+                writer[NameFieldName] = "Oscar";
+                writer[RunningSpeedFieldName] = 35.0;
+                writer.Write();
+
+                // Write 3rd Record  (2nd table)
+                writer[TypeFieldName] = DogType; // Invoke Dog Sequence (after Root
+                                                 // Sequence is finished)
+                writer[NameFieldName] = "Buddy";
+                writer[WalkDistanceFieldName] = 0.5;
+                writer[RunningSpeedFieldName] = 35.0;
+                writer[TrainingFieldName] = false;
+                writer.Write();
+
+                // Write 4th Record (3rd table)
+                writer[TypeFieldName] = DogType; // Invoke Dog Sequence (after Root
+                                                 // Sequence is finished)
+                writer[NameFieldName] = "Charlie";
+                writer[WalkDistanceFieldName] = 2.0;
+                writer[RunningSpeedFieldName] = 48.0;
+                writer[TrainingFieldName] = true; // Invoke Training Sequence
+                                                  // (after this field)
+                writer[TrainerFieldName] = "John";
+                writer[SessionCostFieldName] = 32.0M;
+                writer.Write();
+
+                // Write 5th Record (4th table)
+                writer[TypeFieldName] = DogType; // Invoke Dog Sequence (after Root
+                                                 // Sequence is finished)
+                writer[NameFieldName] = "Max";
+                writer[WalkDistanceFieldName] = 0.5;
+                writer[RunningSpeedFieldName] = 30.0;
+                writer[TrainingFieldName] = false;
+                writer.Write();
+
+                // Write 6th Record (5th table)
+                writer[TypeFieldName] = GoldFishType; // Invoke Gold Fish Sequence
+                                                      // (after Root Sequence)
+                writer[NameFieldName] = "Bubbles";
+                writer[ColorFieldName] = "Orange";
+                writer[ChineseClassificationFieldName] = "Wen";
+                writer.Write();
+
+                // Write 7th Record
+                writer[TypeFieldName] = GoldFishType; // Invoke Gold Fish Sequence
+                                                      // (after Root Sequence)
+                writer[NameFieldName] = "Flash";
+                writer[ColorFieldName] = "Yellow";
+                writer[ChineseClassificationFieldName] = "Crucian";
+                writer.Write();
+            }
+        }
+    }
+}
+```
